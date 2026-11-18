@@ -1,0 +1,2 @@
+# Cartella di un modello Hugging Face per ComfyUI_LLM_SDXL_Adapter
+# s3://mio-bucket/comfyui/llm/gemma-3-1b-it/

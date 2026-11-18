@@ -109,10 +109,8 @@ if [ -n "$COMFY_MODELS_SYNC" ]; then
   fetch "${COMFY_MODELS_SYNC%/}/" "$COMFY_DIR/models" || true
 fi
 
-log "modelli ComfyUI (comfyui/models.txt)"
-while read -r cat src name <&3; do
-  comfy_fetch "$cat" "$src" "${name:-}" || true
-done 3< <(read_list "$REPO_DIR/comfyui/models.txt")
+log "modelli ComfyUI (comfyui/models/<categoria>/*.txt)"
+comfy_lists
 
 log "modelli Ollama dal registry (ollama/models.txt)"
 while read -r model <&3; do

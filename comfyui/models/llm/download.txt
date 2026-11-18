@@ -1,0 +1,2 @@
+# File da scaricare in ComfyUI/models/llm, uno per riga:  <sorgente>  [nome_file]
+# LLM per ComfyUI_LLM_SDXL_Adapter. Ogni modello è una cartella: crea llm/<nome_modello>/download.txt con s3://bucket/llm/<nome_modello>/

@@ -1,0 +1,4 @@
+# File da scaricare in ComfyUI/models/upscale_models, uno per riga:  <sorgente>  [nome_file]
+# (vedi comfyui/models/README.md)
+
+# https://huggingface.co/Kim2091/UltraSharp/resolve/main/4x-UltraSharp.pth

@@ -1,0 +1,2 @@
+# File da scaricare in ComfyUI/models/llm_adapters, uno per riga:  <sorgente>  [nome_file]
+# adapter di ComfyUI_LLM_SDXL_Adapter

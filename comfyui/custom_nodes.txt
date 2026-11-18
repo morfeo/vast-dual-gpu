@@ -1,8 +1,39 @@
 # Custom node di ComfyUI: <url_git> [branch|tag|commit]
+# Vengono clonati in ComfyUI/custom_nodes/ e ne vengono installati i requirements.txt.
 
+# --- base ---
 https://github.com/Comfy-Org/ComfyUI-Manager
-# Serve per caricare i modelli .gguf in ComfyUI (Flux, Wan ... quantizzati):
 https://github.com/city96/ComfyUI-GGUF
-# https://github.com/kijai/ComfyUI-KJNodes
-# https://github.com/cubiq/ComfyUI_IPAdapter_plus
-# https://github.com/Fannovel16/comfyui_controlnet_aux
+https://github.com/rgthree/rgthree-comfy
+https://github.com/pythongosssss/ComfyUI-Custom-Scripts
+https://github.com/yolain/ComfyUI-Easy-Use
+https://github.com/kijai/ComfyUI-KJNodes
+https://github.com/ltdrdata/was-node-suite-comfyui
+https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes
+https://github.com/PanicTitan/ComfyUI-Gallery
+https://github.com/MoonGoblinDev/Civicomfy
+
+# --- video ---
+https://github.com/kijai/ComfyUI-WanVideoWrapper
+https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite
+https://github.com/orssorbit/ComfyUI-wanBlockswap
+https://github.com/smthemex/ComfyUI_UniBlockSwap
+https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler
+https://github.com/Fannovel16/ComfyUI-Frame-Interpolation
+https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler
+
+# --- controllo, dettaglio, LoRA ---
+https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet
+https://github.com/ltdrdata/ComfyUI-Impact-Pack
+https://github.com/TripleHeadedMonkey/ComfyUI-Zlycoris
+https://github.com/NeuroSenko/ComfyUI_LLM_SDXL_Adapter
+
+# --- prompt e LLM (Ollama gira sull'altra GPU: http://127.0.0.1:11434) ---
+https://github.com/stavsap/comfyui-ollama
+https://github.com/ckinpdx/ComfyUI-OllamaOmni
+https://github.com/huixingyun/ComfyUI-HX-Captioner
+https://github.com/kijai/ComfyUI-PromptRelay
+https://github.com/mobcat40/ComfyUI-PromptChain
+
+# --- specifico per RunPod: su vast.ai non serve ---
+# https://github.com/MadiatorLabs/ComfyUI-RunpodDirect

@@ -1,0 +1,2 @@
+# File da scaricare in ComfyUI/models/sams, uno per riga:  <sorgente>  [nome_file]
+# modelli SAM per ComfyUI-Impact-Pack (es. sam_vit_b_01ec64.pth)

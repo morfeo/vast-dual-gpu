@@ -1,0 +1,9 @@
+# File da scaricare in ComfyUI/models/diffusion_models, uno per riga:  <sorgente>  [nome_file]
+# (vedi comfyui/models/README.md)
+
+# https://huggingface.co/Comfy-Org/flux1-dev/resolve/main/flux1-dev-fp8.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/diffusion_models/minimax_h3_fl2va_int8_convrot.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/diffusion_models/krea2_turbo_fp8_scaled.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/diffusion_models/acestep_v1.5_turbo.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/diffusion_models/minimax_h3_hybrid/minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/diffusion_models/minimax_h3_hybrid/minimax_h3_hybrid_fl2va_ref2va_b15-49-int8.safetensors

@@ -1,0 +1,2 @@
+# File da scaricare in ComfyUI/models/SEEDVR2, uno per riga:  <sorgente>  [nome_file]
+# modelli di ComfyUI-SeedVR2_VideoUpscaler (se mancano li scarica da solo al primo uso)

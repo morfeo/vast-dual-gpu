@@ -115,6 +115,20 @@ comfy_fetch() {
   fetch "$src" "$base/$cat" "$name"
 }
 
+# Legge tutte le liste in comfyui/models/<categoria>/*.txt (anche in sottocartelle)
+# e scarica ogni riga "<sorgente> [nome_file]" in ComfyUI/models/<categoria>.
+comfy_lists() {
+  local root="$REPO_DIR/comfyui/models" list cat src name
+  [ -d "$root" ] || return 0
+  while IFS= read -r list <&4; do
+    cat="$(dirname "${list#"$root"/}")"
+    if [ "$cat" = "." ]; then warn "$(basename "$list") è fuori da una cartella di categoria: lo salto"; continue; fi
+    while read -r src name <&3; do
+      comfy_fetch "$cat" "$src" "${name:-}" || true
+    done 3< <(read_list "$list")
+  done 4< <(find "$root" -type f -name '*.txt' | sort)
+}
+
 # --- Ollama da GGUF ---
 # ollama_create_gguf <nome> <file.gguf> [Modelfile]
 # Nel Modelfile scrivi "FROM __GGUF__": viene sostituito col percorso del file.

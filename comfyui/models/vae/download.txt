@@ -1,0 +1,6 @@
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/vae/ace_1.5_vae.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/vae/ema_vae_fp16.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/vae/minimax_h3_audio_vae_fp32.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/vae/minimax_h3_video_vae_fp16.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/vae/minimax_h3_video_vae_int8_convrot.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/vae/qwen_image_vae.safetensors

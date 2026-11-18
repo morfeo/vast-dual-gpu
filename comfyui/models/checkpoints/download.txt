@@ -1,0 +1,4 @@
+# File da scaricare in ComfyUI/models/checkpoints, uno per riga:  <sorgente>  [nome_file]
+# (vedi comfyui/models/README.md)
+
+# s3://mio-bucket/comfyui/checkpoints/sdxl_base_1.0.safetensors

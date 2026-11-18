@@ -1,0 +1,4 @@
+
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/text_encoders/qwen3vl_4b_fp8_scaled.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors

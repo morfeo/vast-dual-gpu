@@ -1,0 +1,12 @@
+
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/Cinema-MH3-V02_000010000.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/MysticXXX_KREA2_v1.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/MysticXXX_KREA2_v2.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/MysticXXX_MMH3-V1.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/Wan2.2-Lightning_I2V-A14B-4steps-lora_HIGH_fp16.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/Wan2.2-Lightning_I2V-A14B-4steps-lora_LOW_fp16.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/lightx2v_hybrid-4to8step-Turbo_r48.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/lightx2v_hybrid-4to8step-full-fusion_Turbo_pruned.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/minimax_h3_film_style.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/morxxxHMH3_v1_000000250.safetensors
+https://gleaming-bardeen.s3.eu-south-mil.io.cloud.ovh.net/gleaming-bardeen/runpod-slim/ComfyUI/models/loras/电影感loraV1.0正式版_剪枝与非剪枝通用.safetensors

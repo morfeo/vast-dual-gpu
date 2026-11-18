@@ -80,17 +80,21 @@ Se il repo è privato usa un token GitHub di sola lettura nell'URL di clone
 
 Tutto si decide in file di testo, una riga per elemento, con `#` per i commenti.
 
-### ComfyUI — `comfyui/models.txt`
+### ComfyUI — `comfyui/models/<categoria>/download.txt`
+
+`comfyui/models/` ricalca `ComfyUI/models`: c'è una cartella per ogni categoria
+(`checkpoints`, `diffusion_models`, `loras`, `vae`, `text_encoders`, `clip_vision`,
+`controlnet`, `upscale_models`, `embeddings`, ...) con dentro un `download.txt`.
+Scrivi in ogni file i modelli da scaricare in quella cartella, uno per riga:
 
 ```
-<categoria>   <sorgente>   [nome_file]
+<sorgente>   [nome_file]
 ```
 
-- **categoria**: qualsiasi cartella di `ComfyUI/models`: `checkpoints`, `diffusion_models`,
-  `loras`, `vae`, `text_encoders`, `clip_vision`, `controlnet`, `upscale_models`, `embeddings`,
-  `hypernetworks`, `style_models`, `gligen`, `photomaker`, `vae_approx`, `model_patches`,
-  `audio_encoders`, `latent_upscale_models`, `diffusers`, `configs` (e i nomi vecchi `unet`, `clip`).
-  Vanno bene anche sottocartelle (`loras/flux`) e cartelle dei custom node (`ipadapter`, `ultralytics/bbox`).
+- Ogni `.txt` nella cartella viene letto: puoi dividere le liste (`loras/flux.txt`, `loras/sdxl.txt`).
+- Sottocartelle (`loras/flux/download.txt` → `ComfyUI/models/loras/flux/`) e cartelle dei
+  custom node (`ipadapter/`, `ultralytics/bbox/`): basta crearle.
+- Dettagli ed elenco delle categorie in [comfyui/models/README.md](comfyui/models/README.md).
 - **sorgente**:
   - `s3://bucket/percorso/file.safetensors`: un file dal bucket;
   - `s3://bucket/cartella/` (con la `/` finale): tutta la cartella;
@@ -136,6 +140,7 @@ mio-bucket/
 ```bash
 cd /workspace/vast-dual-gpu
 scripts/add-model.sh --list                                         # categorie disponibili
+git pull && scripts/add-model.sh --all                              # dopo aver modificato le liste
 scripts/add-model.sh loras s3://mio-bucket/loras/nuovo.safetensors --save
 scripts/add-model.sh loras https://civitai.com/api/download/models/123456 mio_lora.safetensors
 scripts/add-gguf.sh mio-modello s3://mio-bucket/gguf/mio.gguf --save
