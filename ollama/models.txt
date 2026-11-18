@@ -1,0 +1,7 @@
+# Modelli dal registry di Ollama, uno per riga (come in "ollama pull").
+# Funzionano anche i GGUF pubblici su Hugging Face: hf.co/<utente>/<repo>:<quantizzazione>
+# Per i GGUF nel tuo bucket usa invece ollama/gguf.txt.
+
+# qwen3:8b
+# gemma3:27b
+# hf.co/bartowski/Qwen2.5-32B-Instruct-GGUF:Q4_K_M

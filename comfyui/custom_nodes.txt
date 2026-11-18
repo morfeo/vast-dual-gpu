@@ -1,0 +1,8 @@
+# Custom node di ComfyUI: <url_git> [branch|tag|commit]
+
+https://github.com/Comfy-Org/ComfyUI-Manager
+# Serve per caricare i modelli .gguf in ComfyUI (Flux, Wan ... quantizzati):
+https://github.com/city96/ComfyUI-GGUF
+# https://github.com/kijai/ComfyUI-KJNodes
+# https://github.com/cubiq/ComfyUI_IPAdapter_plus
+# https://github.com/Fannovel16/comfyui_controlnet_aux

@@ -1,0 +1,19 @@
+# File GGUF da trasformare in modelli Ollama: una riga per modello.
+#
+#   <nome_modello>   <sorgente>   [Modelfile]
+#
+# nome_modello: come lo chiamerai (ollama run <nome>). Minuscole, cifre, . _ - e :tag
+# sorgente:     s3://bucket/file.gguf  oppure  https://... (link firmato, HF, CivitAI, ...)
+# Modelfile:    facoltativo, file in ollama/modelfiles/ (o percorso assoluto).
+#               Se manca si usa ollama/modelfiles/<nome_modello>.Modelfile se esiste,
+#               altrimenti solo "FROM <file>": Ollama legge il template di chat dal GGUF.
+#
+# Il file viene salvato come $GGUF_DIR/<nome_modello>.gguf.
+# I GGUF divisi in parti (-00001-of-00003) vanno prima uniti in un file unico.
+#
+# Per caricare un'intera cartella del bucket usa GGUF_SYNC in config.env.
+
+# --- esempi ---
+# mio-llama:8b-q4    s3://mio-bucket/gguf/llama-3.1-8b-instruct-Q4_K_M.gguf
+# mio-finetune       s3://mio-bucket/gguf/finetune-q8.gguf      esempio.Modelfile
+# mistral-small      https://huggingface.co/bartowski/Mistral-Small-24B-Instruct-2501-GGUF/resolve/main/Mistral-Small-24B-Instruct-2501-Q4_K_M.gguf

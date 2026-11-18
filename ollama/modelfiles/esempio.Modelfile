@@ -1,0 +1,17 @@
+# Modelfile di esempio. __GGUF__ viene sostituito col percorso del file scaricato.
+# Riferimento: https://github.com/ollama/ollama/blob/main/docs/modelfile.md
+FROM __GGUF__
+
+PARAMETER num_ctx 16384
+PARAMETER temperature 0.7
+
+SYSTEM """Rispondi sempre in italiano."""
+
+# Se il GGUF non contiene il template di chat, scrivilo qui, es. ChatML:
+# TEMPLATE """{{ if .System }}<|im_start|>system
+# {{ .System }}<|im_end|>
+# {{ end }}{{ range .Messages }}<|im_start|>{{ .Role }}
+# {{ .Content }}<|im_end|>
+# {{ end }}<|im_start|>assistant
+# """
+# PARAMETER stop "<|im_end|>"

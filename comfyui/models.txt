@@ -1,0 +1,52 @@
+# Modelli per ComfyUI: una riga per file.
+#
+#   <categoria>   <sorgente>   [nome_file]
+#
+# categoria = cartella sotto ComfyUI/models, anche con sottocartelle (es. loras/flux).
+#   Cartelle standard di ComfyUI:
+#     checkpoints        modelli completi (SD1.5, SDXL, ...)
+#     diffusion_models   solo il modello di diffusione (Flux, Wan, HunyuanVideo, ...)  [ex "unet"]
+#     unet               nome vecchio di diffusion_models, ancora letto
+#     text_encoders      T5, CLIP-L, umt5, ...  [ex "clip"]
+#     clip               nome vecchio di text_encoders, ancora letto
+#     clip_vision        encoder di immagini (IP-Adapter, Wan i2v, ...)
+#     vae                VAE
+#     vae_approx         VAE leggeri per le anteprime (TAESD)
+#     loras              LoRA e LyCORIS
+#     controlnet         ControlNet e T2I-Adapter
+#     upscale_models     ESRGAN, 4x-UltraSharp, ...
+#     latent_upscale_models
+#     embeddings         textual inversion
+#     hypernetworks
+#     style_models
+#     gligen
+#     photomaker
+#     model_patches
+#     audio_encoders
+#     diffusers          modelli in formato diffusers (cartella)
+#     configs            file .yaml di configurazione
+#   Una categoria diversa viene creata comunque (es. ipadapter, ultralytics/bbox, sams
+#   che usano alcuni custom node). Sull'istanza: scripts/add-model.sh --list
+#
+# sorgente:
+#   s3://bucket/percorso/file.safetensors   file dal tuo bucket (credenziali nel template vast)
+#   s3://bucket/cartella/                   tutta la cartella (finisce con /)
+#   https://...                             link firmato del bucket o qualsiasi URL pubblico
+#   https://huggingface.co/...              usa HF_TOKEN se impostato (anche i link "blob")
+#   https://civitai.com/api/download/models/<id>   usa CIVITAI_TOKEN se impostato
+#
+# nome_file: facoltativo. Mettilo quando l'URL non finisce col nome del file
+#   (es. CivitAI, link firmati con ?X-Amz-...), così sai come si chiamerà.
+
+# --- esempi (togli il # per attivarli) ---
+# checkpoints       s3://mio-bucket/comfyui/checkpoints/sdxl_base_1.0.safetensors
+# loras             s3://mio-bucket/comfyui/loras/
+# loras/flux        s3://mio-bucket/comfyui/loras/flux/mio_stile.safetensors
+# diffusion_models  https://huggingface.co/Comfy-Org/flux1-dev/resolve/main/flux1-dev-fp8.safetensors
+# vae               https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/ae.safetensors
+# text_encoders     https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors
+# text_encoders     https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors
+# upscale_models    https://huggingface.co/Kim2091/UltraSharp/resolve/main/4x-UltraSharp.pth
+# loras             https://civitai.com/api/download/models/123456   mio_lora.safetensors
+# link firmato (aws s3 presign s3://mio-bucket/wan.gguf --expires-in 604800), scade dopo max 7 giorni:
+# diffusion_models  https://mio-bucket.s3.eu-south-1.amazonaws.com/wan.gguf?X-Amz-Signature=...   wan2.2-q8.gguf
