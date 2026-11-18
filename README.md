@@ -19,14 +19,14 @@ Non usare il template ComfyUI di vast: ha già il suo ComfyUI.
 **Non toccare l'on-start script** del template: avvia i servizi di vast.
 Il nostro setup parte da `PROVISIONING_SCRIPT`, che vast esegue al primo avvio.
 
-**Docker options**: aggiungi `-p 8188:8188` (per ComfyUI nel portale).
+**Docker options**: aggiungi `-p 8188:8188 -p 21434:21434` (ComfyUI e Ollama nel portale).
 
 **Variabili d'ambiente**:
 
 | Variabile | Valore |
 |---|---|
 | `PROVISIONING_SCRIPT` | repo pubblico: `https://raw.githubusercontent.com/morfeo/vast-dual-gpu/main/provision.sh`<br>repo privato: URL "Raw" di un Gist secret con dentro `provision.sh` |
-| `PORTAL_CONFIG` | quella del template **più** `\|localhost:8188:18188:/:ComfyUI` in fondo |
+| `PORTAL_CONFIG` | quella del template **più** `\|localhost:8188:18188:/:ComfyUI\|localhost:21434:11434:/:Ollama` in fondo |
 | `GH_TOKEN` | solo se il repo è privato: token GitHub fine-grained, sola lettura, solo questo repo |
 | `HF_TOKEN` | facoltativo: modelli Hugging Face ad accesso limitato (Flux dev, ...) |
 | `CIVITAI_TOKEN` | facoltativo: download da CivitAI |
@@ -38,7 +38,35 @@ Il nostro setup parte da `PROVISIONING_SCRIPT`, che vast esegue al primo avvio.
 Con la voce `ComfyUI` in `PORTAL_CONFIG`, setup.sh fa ascoltare ComfyUI sulla porta
 interna (18188, solo locale) e il portale di vast la pubblica sulla 8188 con password.
 Dalla scheda dell'istanza premi **Open** e poi **ComfyUI**: niente tunnel SSH.
-Ollama resta solo interno (ComfyUI lo raggiunge su `127.0.0.1:11434`).
+
+### Ollama da un ambiente esterno
+
+Con la voce `Ollama` in `PORTAL_CONFIG` il portale pubblica Ollama sulla porta 21434
+(quella vera esterna la assegna vast, la vedi cliccando sull'IP nella scheda) e su un
+indirizzo `https://...trycloudflare.com` (lo trovi nell'Instance Portal). Ogni richiesta
+deve essere autenticata, in uno di questi modi:
+
+- **Bearer token** (consigliato): header `Authorization: Bearer <OPEN_BUTTON_TOKEN>`.
+  I client compatibili OpenAI lo mandano da soli se usi il token come API key:
+
+  ```python
+  from openai import OpenAI
+  client = OpenAI(base_url="https://<indirizzo>/v1", api_key="<OPEN_BUTTON_TOKEN>")
+  client.chat.completions.create(model="qwen3:8b", messages=[{"role": "user", "content": "ciao"}])
+  ```
+
+  Per l'API nativa di Ollama (`/api/chat`, `/api/generate`) aggiungi lo stesso header.
+- **Basic auth**: utente `vastai` (o `WEB_USERNAME`), password `WEB_PASSWORD` se la imposti
+  nel template, altrimenti `OPEN_BUTTON_TOKEN`.
+
+`OPEN_BUTTON_TOKEN` lo genera vast e cambia a ogni istanza: leggilo via SSH con
+`echo $OPEN_BUTTON_TOKEN` e aggiornalo nell'ambiente esterno. Anche l'indirizzo
+trycloudflare cambia a ogni istanza.
+
+Con il tunnel Cloudflare usa lo streaming (`stream: true`) per le risposte lunghe:
+una richiesta che resta muta per più di ~100 secondi viene interrotta.
+
+Non aprire mai la porta 11434 direttamente (`-p 11434:11434`): Ollama non ha password.
 
 ### Primo avvio e riavvii
 
@@ -163,7 +191,8 @@ scripts/status.sh                                                   # servizi, V
 
 - **ComfyUI**: dalla scheda dell'istanza su vast.ai premi **Open** → **ComfyUI**
   (protetto dalla password del portale).
-- **Ollama** non ha autenticazione e resta interno. Per usarlo dal tuo computer apri un tunnel SSH
+- **Ollama** da un ambiente esterno: tramite il portale, vedi "Ollama da un ambiente esterno".
+- **Ollama** dal tuo computer, senza token: apri un tunnel SSH
   (IP e porta SSH sono nella scheda dell'istanza):
 
   ```bash

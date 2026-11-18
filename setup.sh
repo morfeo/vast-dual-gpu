@@ -29,6 +29,25 @@ if [ -n "$portal_comfy" ]; then
   log "ComfyUI nel portale di vast: porta esterna $(echo "$portal_comfy" | cut -d: -f2), interna $COMFY_PORT"
 fi
 
+# Ollama nel portale (voce "Ollama", es. localhost:21434:11434:/:Ollama): resta sulla
+# sua porta interna (così ComfyUI e gli script lo trovano su 127.0.0.1:11434) e il
+# portale lo pubblica sulla porta esterna con autenticazione.
+# Ollama rifiuta le richieste con un Host pubblico se ascolta solo su 127.0.0.1, e dietro
+# il proxy l'Host è quello pubblico: quindi ascolta su 0.0.0.0. Dall'esterno la porta
+# interna resta chiusa, perché nelle Docker options si apre solo quella esterna.
+portal_ollama="$(printf '%s' "${PORTAL_CONFIG:-}" | tr '|' '\n' | grep -i ':Ollama$' | head -1 || true)"
+if [ -n "$portal_ollama" ]; then
+  ext="$(echo "$portal_ollama" | cut -d: -f2)"; int="$(echo "$portal_ollama" | cut -d: -f3)"
+  if [ "$int" != "$OLLAMA_PORT" ]; then
+    warn "in PORTAL_CONFIG la porta interna di Ollama è $int ma Ollama ascolta su $OLLAMA_PORT: usa localhost:$ext:$OLLAMA_PORT:/:Ollama"
+  fi
+  if [ "$ext" = "$OLLAMA_PORT" ]; then
+    warn "porta esterna di Ollama uguale a quella interna: il portale non mette la password. Usa per esempio 21434"
+  fi
+  OLLAMA_LISTEN=0.0.0.0
+  log "Ollama nel portale di vast: porta esterna $ext (con autenticazione)"
+fi
+
 # ---------------------------------------------------------------- pacchetti
 log "installo i pacchetti di sistema"
 export DEBIAN_FRONTEND=noninteractive
