@@ -29,8 +29,11 @@ https://github.com/TripleHeadedMonkey/ComfyUI-Zlycoris
 https://github.com/NeuroSenko/ComfyUI_LLM_SDXL_Adapter
 
 # --- prompt e LLM (Ollama gira sull'altra GPU: http://127.0.0.1:11434) ---
-https://github.com/stavsap/comfyui-ollama
+# OllamaOmni è un fork di comfyui-ollama con gli stessi nodi (OllamaChat, OllamaGenerateV2, ...)
+# più audio e video. Installati insieme ComfyUI non parte: registrano la stessa
+# route /ollama/get_models. Tieni solo uno dei due.
 https://github.com/ckinpdx/ComfyUI-OllamaOmni
+# https://github.com/stavsap/comfyui-ollama
 https://github.com/huixingyun/ComfyUI-HX-Captioner
 https://github.com/kijai/ComfyUI-PromptRelay
 https://github.com/mobcat40/ComfyUI-PromptChain
