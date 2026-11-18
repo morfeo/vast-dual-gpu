@@ -26,6 +26,10 @@ portal_comfy="$(printf '%s' "${PORTAL_CONFIG:-}" | tr '|' '\n' | grep -i ':Comfy
 if [ -n "$portal_comfy" ]; then
   COMFY_PORT="$(echo "$portal_comfy" | cut -d: -f3)"
   COMFY_LISTEN=127.0.0.1
+  # Dietro il proxy del portale l'Host arriva come "localhost" mentre l'Origin del browser
+  # è l'indirizzo pubblico: il controllo Host/Origin di ComfyUI risponderebbe 403.
+  # --enable-cors-header sostituisce quel controllo; l'accesso resta protetto dal portale.
+  case " $COMFY_ARGS " in *" --enable-cors-header"*) ;; *) COMFY_ARGS="$COMFY_ARGS --enable-cors-header" ;; esac
   log "ComfyUI nel portale di vast: porta esterna $(echo "$portal_comfy" | cut -d: -f2), interna $COMFY_PORT"
 fi
 
