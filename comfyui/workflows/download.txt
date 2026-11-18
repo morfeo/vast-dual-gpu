@@ -1,0 +1,17 @@
+# Workflow da scaricare in ComfyUI (menu Workflow → Apri / barra laterale "Workflows").
+# Finiscono in ComfyUI/user/default/workflows/. Uno per riga:
+#
+#   <sorgente>   [nome_file.json]
+#
+# Le sottocartelle funzionano come per i modelli: comfyui/workflows/video/download.txt
+# finisce in workflows/video/ e in ComfyUI appare come cartella.
+#
+# Se il nome del file ha spazi o caratteri speciali (nell'URL diventano %20 ...),
+# scrivi il nome_file, così in ComfyUI lo vedi pulito.
+#
+# Puoi anche mettere i .json direttamente in questa cartella del repo: vengono copiati.
+# Un workflow già presente sull'istanza non viene sovrascritto, così non perdi le
+# modifiche salvate da ComfyUI.
+
+# https://tuo-bucket.s3.eu-south-1.amazonaws.com/comfyui/workflows/wan_i2v.json
+# https://tuo-bucket.s3.eu-south-1.amazonaws.com/comfyui/workflows/Flux%20ritratto.json   flux_ritratto.json

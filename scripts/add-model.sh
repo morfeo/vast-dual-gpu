@@ -4,14 +4,14 @@
 #   add-model.sh --list        mostra le categorie (cartelle in ComfyUI/models)
 # --save aggiunge la riga anche a comfyui/models/<categoria>/download.txt,
 #        così al prossimo avvio c'è.
-#   add-model.sh --all         riscarica tutte le liste (dopo un git pull)
+#   add-model.sh --all         riscarica tutte le liste e i workflow (dopo un git pull)
 set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 source "$REPO_DIR/config.env"
 source "$REPO_DIR/lib.sh"
 
 if [ "${1:-}" = "--list" ]; then ls -1 "$WORKSPACE/ComfyUI/models"; exit 0; fi
-if [ "${1:-}" = "--all" ]; then comfy_lists; log "fatto."; exit 0; fi
+if [ "${1:-}" = "--all" ]; then comfy_workflows; comfy_lists; log "fatto."; exit 0; fi
 
 save=0; args=()
 for a in "$@"; do if [ "$a" = "--save" ]; then save=1; else args+=("$a"); fi; done

@@ -129,6 +129,29 @@ comfy_lists() {
   done 4< <(find "$root" -type f -name '*.txt' | sort)
 }
 
+# Workflow: comfyui/workflows/**/*.txt (liste da scaricare) e **/*.json (copiati)
+# in ComfyUI/user/default/workflows, mantenendo le sottocartelle.
+# Un workflow già presente non viene sovrascritto.
+comfy_workflows() {
+  local root="$REPO_DIR/comfyui/workflows" dest="$WORKSPACE/ComfyUI/user/default/workflows"
+  local f rel src name
+  [ -d "$root" ] || return 0
+  mkdir -p "$dest"
+  while IFS= read -r f <&4; do
+    rel="${f#"$root"/}"
+    mkdir -p "$dest/$(dirname "$rel")"
+    if [ -e "$dest/$rel" ]; then continue; fi
+    cp "$f" "$dest/$rel" && log "workflow copiato: $rel"
+  done 4< <(find "$root" -type f -name '*.json' | sort)
+  while IFS= read -r f <&4; do
+    rel="$(dirname "${f#"$root"/}")"
+    while read -r src name <&3; do
+      if [ -n "${name:-}" ] && [ -e "$dest/$rel/$name" ]; then continue; fi
+      fetch "$src" "$dest/$rel" "${name:-}" || true
+    done 3< <(read_list "$f")
+  done 4< <(find "$root" -type f -name '*.txt' | sort)
+}
+
 # --- Ollama da GGUF ---
 # ollama_create_gguf <nome> <file.gguf> [Modelfile]
 # Nel Modelfile scrivi "FROM __GGUF__": viene sostituito col percorso del file.

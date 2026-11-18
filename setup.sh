@@ -109,6 +109,9 @@ if [ -n "$COMFY_MODELS_SYNC" ]; then
   fetch "${COMFY_MODELS_SYNC%/}/" "$COMFY_DIR/models" || true
 fi
 
+log "workflow ComfyUI (comfyui/workflows)"
+comfy_workflows
+
 log "modelli ComfyUI (comfyui/models/<categoria>/*.txt)"
 comfy_lists
 

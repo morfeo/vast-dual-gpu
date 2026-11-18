@@ -103,6 +103,15 @@ Scrivi in ogni file i modelli da scaricare in quella cartella, uno per riga:
   - `https://civitai.com/api/download/models/<id>`: aggiunge `CIVITAI_TOKEN`.
 - **nome_file**: facoltativo. Utile quando l'URL non finisce col nome del file.
 
+### Workflow — `comfyui/workflows/download.txt`
+
+Link ai tuoi workflow `.json` (uno per riga, `<sorgente> [nome_file.json]`), oppure i `.json`
+messi direttamente in `comfyui/workflows/`. Finiscono in `ComfyUI/user/default/workflows/`
+e li trovi nella barra laterale "Workflows". Le sottocartelle vengono mantenute.
+Un workflow già presente sull'istanza non viene sovrascritto.
+
+### Custom node
+
 Custom node in `comfyui/custom_nodes.txt` (c'è già ComfyUI-Manager, più ComfyUI-GGUF per i modelli `.gguf` di diffusione).
 
 ### Ollama — `ollama/models.txt` e `ollama/gguf.txt`
