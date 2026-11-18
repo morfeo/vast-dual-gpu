@@ -10,14 +10,41 @@ source "$REPO_DIR/config.env"
 source "$REPO_DIR/lib.sh"
 
 COMFY_DIR="$WORKSPACE/ComfyUI"
-VENV="$WORKSPACE/comfy-venv"
 mkdir -p "$WORKSPACE/logs" "$GGUF_DIR" "$OLLAMA_MODELS_DIR"
+
+# Template vast.ai (immagine base di vast): PyTorch è già in /venv/main e lo usiamo.
+# Altre immagini: creiamo un venv che vede il torch di sistema.
+if [ -x /venv/main/bin/python ]; then
+  VENV=/venv/main
+else
+  VENV="$WORKSPACE/comfy-venv"
+fi
+
+# Se ComfyUI è nel portale di vast (PORTAL_CONFIG con una voce "ComfyUI"),
+# deve ascoltare sulla porta interna di quella voce: il portale la espone con password.
+portal_comfy="$(printf '%s' "${PORTAL_CONFIG:-}" | tr '|' '\n' | grep -i ':ComfyUI$' | head -1 || true)"
+if [ -n "$portal_comfy" ]; then
+  COMFY_PORT="$(echo "$portal_comfy" | cut -d: -f3)"
+  COMFY_LISTEN=127.0.0.1
+  log "ComfyUI nel portale di vast: porta esterna $(echo "$portal_comfy" | cut -d: -f2), interna $COMFY_PORT"
+fi
 
 # ---------------------------------------------------------------- pacchetti
 log "installo i pacchetti di sistema"
 export DEBIAN_FRONTEND=noninteractive
+pkgs=(git aria2 curl zstd python3-venv python3-pip)
+# l'immagine base di vast ha già il suo supervisor: non reinstallarlo
+command -v supervisorctl >/dev/null 2>&1 || pkgs+=(supervisor)
 apt-get update -qq
-apt-get install -y -qq git aria2 curl zstd supervisor python3-venv python3-pip >/dev/null
+apt-get install -y -qq "${pkgs[@]}" >/dev/null
+
+pip_install() {
+  if command -v uv >/dev/null 2>&1; then
+    uv pip install -q --python "$VENV/bin/python" "$@"
+  else
+    "$VENV/bin/python" -m pip install -q "$@"
+  fi
+}
 
 # ---------------------------------------------------------------- GPU
 NGPU="$(nvidia-smi -L 2>/dev/null | wc -l | tr -d ' ')"
@@ -39,8 +66,8 @@ if [ ! -x "$VENV/bin/python" ]; then
   # --system-site-packages: riusa il torch già presente nell'immagine (risparmia GB)
   python3 -m venv --system-site-packages "$VENV"
 fi
-log "dipendenze di ComfyUI"
-"$VENV/bin/pip" install -q -r "$COMFY_DIR/requirements.txt"
+log "dipendenze di ComfyUI (Python: $VENV)"
+pip_install -r "$COMFY_DIR/requirements.txt"
 
 log "custom node"
 while read -r repo ref <&3; do
@@ -51,7 +78,7 @@ while read -r repo ref <&3; do
     if [ -n "${ref:-}" ]; then git -C "$dir" checkout -q "$ref" || warn "$name: ref $ref non trovato"; fi
   fi
   if [ -f "$dir/requirements.txt" ]; then
-    "$VENV/bin/pip" install -q -r "$dir/requirements.txt" || warn "$name: requisiti non installati"
+    pip_install -r "$dir/requirements.txt" || warn "$name: requisiti non installati"
   fi
 done 3< <(read_list "$REPO_DIR/comfyui/custom_nodes.txt")
 
@@ -88,7 +115,7 @@ stdout_logfile_maxbytes=20MB
 redirect_stderr=true
 EOF
 
-if pgrep -x supervisord >/dev/null; then
+if pgrep -f supervisord >/dev/null; then
   supervisorctl reread >/dev/null
   supervisorctl update
 else

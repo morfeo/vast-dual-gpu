@@ -6,75 +6,75 @@ da link firmati o da Hugging Face e CivitAI.
 
 | Servizio | GPU | Porta | Dati |
 |---|---|---|---|
-| ComfyUI | `COMFY_GPU` (0) | 8188 | `/workspace/ComfyUI` |
+| ComfyUI | `COMFY_GPU` (0) | 8188 (portale) | `/workspace/ComfyUI` |
 | Ollama  | `OLLAMA_GPU` (1) | 11434 | `/workspace/ollama-models`, GGUF in `/workspace/gguf` |
 
 ## 1. Template vast.ai
 
-**Immagine**: una con CUDA e PyTorch, per esempio `pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime`
-o `vastai/pytorch`. Non usare l'immagine ComfyUI di vast: ha già il suo ComfyUI sulla 8188.
+Parti dal template ufficiale **PyTorch (Vast)** e fanne una copia tua
+(Templates → icona matita → salva in "My Templates"). L'immagine ha già CUDA,
+PyTorch in `/venv/main`, supervisor e l'Instance Portal: lo script usa tutto questo.
+Non usare il template ComfyUI di vast: ha già il suo ComfyUI.
 
-**Spazio disco**: abbondante. Checkpoint, video model e LLM occupano decine di GB ciascuno.
+**Non toccare l'on-start script** del template: avvia i servizi di vast.
+Il nostro setup parte da `PROVISIONING_SCRIPT`, che vast esegue al primo avvio.
 
-**Variabili d'ambiente** (nel template, *non* nel repo):
+**Docker options**: aggiungi `-p 8188:8188` (per ComfyUI nel portale).
+
+**Variabili d'ambiente**:
+
+| Variabile | Valore |
+|---|---|
+| `PROVISIONING_SCRIPT` | repo pubblico: `https://raw.githubusercontent.com/morfeo/vast-dual-gpu/main/provision.sh`<br>repo privato: URL "Raw" di un Gist secret con dentro `provision.sh` |
+| `PORTAL_CONFIG` | quella del template **più** `\|localhost:8188:18188:/:ComfyUI` in fondo |
+| `GH_TOKEN` | solo se il repo è privato: token GitHub fine-grained, sola lettura, solo questo repo |
+| `HF_TOKEN` | facoltativo: modelli Hugging Face ad accesso limitato (Flux dev, ...) |
+| `CIVITAI_TOKEN` | facoltativo: download da CivitAI |
+
+**Disco**: abbondante. Checkpoint, modelli video e LLM occupano decine di GB ciascuno.
+
+### ComfyUI nel portale
+
+Con la voce `ComfyUI` in `PORTAL_CONFIG`, setup.sh fa ascoltare ComfyUI sulla porta
+interna (18188, solo locale) e il portale di vast la pubblica sulla 8188 con password.
+Dalla scheda dell'istanza premi **Open** e poi **ComfyUI**: niente tunnel SSH.
+Ollama resta solo interno (ComfyUI lo raggiunge su `127.0.0.1:11434`).
+
+### Primo avvio e riavvii
+
+- Al primo avvio `provision.sh` clona il repo in `/workspace/vast-dual-gpu` e lancia
+  `setup.sh`. Log: `/workspace/logs-setup.txt` (anche nel portale, sezione log).
+- Se fermi e riavvii l'istanza (stop, non destroy), tutto resta e supervisor riavvia
+  ComfyUI e Ollama da solo: il provisioning non riparte.
+- Se cambi le liste su GitHub con l'istanza accesa o riavviata:
+  `cd /workspace/vast-dual-gpu && git pull && scripts/add-model.sh --all`
+  (con repo privato: `git pull https://x-access-token:$GH_TOKEN@github.com/morfeo/vast-dual-gpu main`).
+
+### File privati nel bucket (facoltativo)
+
+Se i file del bucket sono pubblici bastano i link https e non serve nient'altro.
+Per file privati usa righe `s3://...` e aggiungi al template:
 
 | Variabile | A cosa serve |
 |---|---|
-| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | chiavi dell'utente IAM di sola lettura (vedi sotto) |
-| `AWS_DEFAULT_REGION` | regione del bucket, es. `eu-south-1` (Milano), `eu-central-1` (Francoforte) |
-| `S3_ENDPOINT_URL` | **non serve con AWS S3**: lasciala vuota (solo per R2, B2, Wasabi, MinIO) |
-| `HF_TOKEN` | modelli Hugging Face con accesso limitato (Flux dev, ...) |
-| `CIVITAI_TOKEN` | download da CivitAI |
-| `COMFY_MODELS_SYNC`, `GGUF_SYNC` | facoltativi, vedi sotto |
+| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | chiavi di un utente IAM di sola lettura |
+| `AWS_DEFAULT_REGION` | regione del bucket, es. `eu-south-1` |
+| `S3_ENDPOINT_URL` | solo per R2, B2, Wasabi, MinIO (con AWS lasciala vuota) |
 
-In alternativa crea a mano `/workspace/secrets.env` sull'istanza (stesso formato `CHIAVE=valore`).
-
-### Utente AWS di sola lettura
-
-Non usare le chiavi del tuo account: su vast.ai l'istanza gira su macchine di terzi.
-In IAM crea un utente dedicato (es. `vast-reader`) con questa policy, poi genera una
-access key per lui (tipo "Application running outside AWS"):
+Policy IAM minima per l'utente (sostituisci `MIO-BUCKET`):
 
 ```json
 {
   "Version": "2012-10-17",
   "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["s3:ListBucket", "s3:GetBucketLocation"],
-      "Resource": "arn:aws:s3:::MIO-BUCKET"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::MIO-BUCKET/*"
-    }
+    { "Effect": "Allow", "Action": ["s3:ListBucket", "s3:GetBucketLocation"], "Resource": "arn:aws:s3:::MIO-BUCKET" },
+    { "Effect": "Allow", "Action": "s3:GetObject", "Resource": "arn:aws:s3:::MIO-BUCKET/*" }
   ]
 }
 ```
 
-Se vuoi limitarla a una cartella, sostituisci `MIO-BUCKET/*` con `MIO-BUCKET/comfyui/*` ecc.
-Quando smetti di usare vast.ai, disattiva la chiave.
-
-Prova dal tuo computer che le chiavi funzionano:
-
-```bash
-AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=... AWS_DEFAULT_REGION=eu-south-1 aws s3 ls s3://MIO-BUCKET/
-```
-
 **Costi**: scaricare da S3 verso vast.ai è traffico in uscita da AWS (circa 0,09 $/GB).
-Un checkpoint da 20 GB scaricato a ogni nuova istanza si somma: tieni l'istanza
-ferma (stop, non destroy) quando possibile, così `/workspace` resta e non riscarichi.
-
-**On-start script**:
-
-```bash
-cd /workspace && (git -C vast-dual-gpu pull --ff-only || git clone https://github.com/<TUO_UTENTE>/vast-dual-gpu) \
-  && bash vast-dual-gpu/setup.sh 2>&1 | tee -a /workspace/logs-setup.txt
-```
-
-Se il repo è privato usa un token GitHub di sola lettura nell'URL di clone
-(`https://<token>@github.com/...`), sempre passato come variabile del template.
+Ferma l'istanza invece di distruggerla quando puoi: `/workspace` resta e non riscarichi.
 
 ## 2. Cosa scaricare
 
@@ -161,15 +161,19 @@ scripts/status.sh                                                   # servizi, V
 
 ## 4. Collegarsi
 
-Le porte sono su `127.0.0.1`: Ollama non ha autenticazione e nemmeno ComfyUI.
-Usa un tunnel SSH:
+- **ComfyUI**: dalla scheda dell'istanza su vast.ai premi **Open** → **ComfyUI**
+  (protetto dalla password del portale).
+- **Ollama** non ha autenticazione e resta interno. Per usarlo dal tuo computer apri un tunnel SSH
+  (IP e porta SSH sono nella scheda dell'istanza):
 
-```bash
-ssh -p <PORTA_SSH> root@<IP> -L 8188:localhost:8188 -L 11434:localhost:11434
-```
+  ```bash
+  ssh -p <PORTA_SSH> root@<IP> -L 11434:localhost:11434 -L 8188:localhost:18188
+  ```
 
-Poi apri http://localhost:8188 (ComfyUI) e usa http://localhost:11434 (Ollama).
-Se vuoi davvero esporre ComfyUI, imposta `COMFY_LISTEN=0.0.0.0` e aggiungi `-p 8188:8188` alle Docker options.
+  poi Ollama è su http://localhost:11434 (e ComfyUI anche su http://localhost:8188).
+
+Senza la voce ComfyUI in `PORTAL_CONFIG`, ComfyUI ascolta direttamente su `127.0.0.1:8188`:
+nel tunnel usa `-L 8188:localhost:8188`.
 
 ## Note
 
